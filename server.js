@@ -9,9 +9,17 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 const bodyParser = require('body-parser');
+const session = require('express-session');
 
 // Application will serve the html and css in the public directory
 app.use(express.static("public"));
+
+// Application will use sessions to store user's stats
+app.use(session({
+    secret: "Do or do not, there is no try",
+    resave: false,
+    saveUninitialized: true
+}))
 
 // Body Parser
 app.use(bodyParser.json());
