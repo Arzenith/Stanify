@@ -29,7 +29,7 @@ var nonNullTrackCount = 0;
 var nullTrackCount = 0;
 var albumCount = 0;
 var songs = [];
-var artist = "Eric Clapton";
+var artist;
 
 // Stopwatch Variables
 var seconds = 00; 
@@ -46,6 +46,15 @@ function Song(name, albumPicture, previewUrl) {
     this.previewUrl = previewUrl;
 }
 
+// Replaces webpage information with the cookie data
+lastGuess.innerHTML = getCookie('lastGuess');
+appendTens.innerHTML = getCookie('appendTens');
+appendSeconds.innerHTML = getCookie('appendSeconds');
+
+albumArt.src = getCookie('albumArt');
+albumArt.classList.add("blur");
+artist = getCookie('artist');
+
 // Function fetches data and parses based off input artist
 function fetchSongs(artistInput) {
     // Reset Game
@@ -54,13 +63,12 @@ function fetchSongs(artistInput) {
     resetTimer(false);
 
     // When Fetching, display loading gif
-    albumArt.src = "./img/load.gif";
-    albumArt.classList.remove("blur");
+    //albumArt.src = "./img/load.gif";
+    //albumArt.classList.remove("blur");
 
     // Create artist URL used for fetch
     artistURL = "http://localhost:8888/spotify/search/artist/" + artistInput
 
-    // Use artistURL to fetch data from Spotify's API
     fetch(artistURL)
     .then(response =>{
         if(!response.ok)
@@ -71,24 +79,18 @@ function fetchSongs(artistInput) {
         return response.json();
     })
     .then(async (response) =>{
-        // After the response is received, begin to parse the default arist and generate all tracks
         await parseArtist(response);
-        // Load Audio Player with all generated tracks
         await LoadAudioPlayer();
     })
 }
 
+
 // Passed fetch json, parse artist data and load into songs[] array
 async function parseArtist(res) {
-    // Grab the aritst name from the reponse
     var artistParsed = res.artistData[0];
-
-    // Parse through the JSON and iterate through the tracks of each album
     artistParsed.albums.forEach((album) => {
         album.tracks.forEach((track) => {
-            // If the track exists
             if(track.previewUrl != null) {
-                // Add track to songs array
                 songs.push(new Song(track.name, album.albumPicture, track.previewUrl));
 
                 nonNullTrackCount++;
@@ -102,7 +104,8 @@ async function parseArtist(res) {
     })
 
     // Print out fetch data info
-    console.log(artistParsed.name)
+    console.log(artistParsed.name);
+    document.cookie = "artist=" + artistParsed.name;
     console.log('Available', nonNullTrackCount);
     console.log('Not Available', nullTrackCount);
     console.log('Album Count', albumCount);
@@ -116,6 +119,8 @@ async function LoadAudioPlayer() {
 
     // Load current songs album picture and adds styling
     albumArt.src = currentSong.albumPicture;
+    document.cookie = "albumArt=" + currentSong.albumPicture;
+    cookieLog();
     albumArt.classList.add("blur");
     // Load preview song into source
     player.src = currentSong.previewUrl;
@@ -137,6 +142,12 @@ async function LoadAudioPlayer() {
                 // Update Lastest Score
                 score = String(seconds + "." + tens + " seconds")
                 lastGuess.innerHTML = score
+                document.cookie = "lastGuess=" + score;
+
+                document.cookie = "appendTens=" + tens;
+                document.cookie = "appendSeconds=" + seconds;
+
+                console.log("HERE: " + document.cookie)
                 
                 // Begin Unblur Animation
                 albumArt.classList.remove("blur");
@@ -226,9 +237,12 @@ function resetTimer(nextFlag) {
     tens = "00";
     seconds = "00";
 
-    // Update HTML
+    // Update HTML and Cookies
     appendTens.innerHTML = tens;
+    document.cookie = "appendTens" + tens;
+
     appendSeconds.innerHTML = seconds;
+    document.cookie = "appendSeconds" + seconds;
 
     // If right arrow key is pressed, reset timer
     if(nextFlag == true) {
@@ -255,9 +269,33 @@ function addArtist() {
     newArtist.setAttribute("onclick", `fetchSongs('${searchArtistInput.value}')`);
 
     buttonList.appendChild(newArtist);
+    console.assert(buttonList.lastChild.text === searchArtistInput.value, "Artist did not add correctly")
 
     // Reset input box when finished
     searchArtistInput.value = "";
 }
+
+function getCookie(cookieID)
+{
+    let cookie = {};
+    document.cookie.split(';').forEach((element) =>{
+        let [key, value] = element.split('=');
+        cookie[key.trim()] = value;
+    });
+    return cookie[cookieID]
+}
+
+function cookieLog() 
+{
+    var cookies = document.cookie.split(';').reduce(
+        (cookies, cookie) => {
+            const [name, val] = cookie.split('=').map(c => c.trim());
+            cookies[name] = val;
+            return cookies;
+        }, {});
+        console.log(cookies)
+}
+
+cookieLog()
 
 fetchSongs(artist)

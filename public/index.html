@@ -53,8 +53,8 @@
 
             <div class="col-6 d-flex justify-content-end">
                 <div class="stats d-flex flex-column d-flex justify-content-center align-items-stretch">
-                    <!-- <div><b>Alltime:</b> 03.50 seconds</div>
-                    <div><b>Current:</b> 05.20 seconds</div> -->
+                    <div id = "Alltime"><b>Alltime:</b> 03.50 seconds</div>
+                    <div><b>Current:</b> 05.20 seconds</div>
                     <div><b>Last Guess: </b><span id="last-guess"></span></div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
 
         <div class="row middle-top">
             <div class="col x d-flex flex-column">
-                <h2><span id="seconds">00</span>.<span id="tens">00</span> s</h2>
+                <h2><span id="seconds"></span>.<span id="tens"></span> s</h2>
                 <div><img class="" alt="Album Art" id="album-art"></div>
             </div>
         </div>
@@ -95,7 +95,22 @@
         crossorigin="anonymous"></script>
 
     <!-- Our Script -->
+    <script>
+        // Initializes cookies 
+        if (!document.cookie)
+        {
+            document.cookie = 'appendTens=00';
+            document.cookie = 'appendSeconds=00';
+            document.cookie = 'lastGuess=00.00 seconds';
+            document.cookie = 'albumArt=';
+            document.cookie = 'artistList=';
+            document.cookie = 'artist= Hanz Zimmer';
+        }
+        console.log(document.cookie);
+
+    </script>
     <script src="script.js"></script>
+    
     <!-- <script type="module" src="parser.js"></script> -->
 </body>
 
