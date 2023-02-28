@@ -1,4 +1,3 @@
-
 // Node.js libraries
 const express = require('express');
 const axios = require('axios');
@@ -15,7 +14,7 @@ const tokenUrl = 'https://accounts.spotify.com/api/token';
 const baseUrl = 'https://api.spotify.com/v1/';
 
 // Variable to hold the token
-var accessToken = '';
+var accessToken = ''
 
 // Request options to be sent when request for a new token 
 const reqOptions = {
@@ -27,6 +26,8 @@ const reqOptions = {
       password: SPOTIFY_CLIENT_SECRET,
     }
 };
+
+
 
 // ----- Middleware for the base endpoint of spotify ------
 // Middleware will generate a new token when the user first accesses the  website
@@ -167,6 +168,29 @@ router.get('/', async (req, res) => {
 // Endpoint for user to request an artist that takes in a search parameter
 router.get('/search/artist/:search', async (req, res) => {
     res.send({ artistData : res.locals.artistData });
+})
+
+router.get('/search/track/:name/:artist', async (req, res) => {
+    if(!(req.params.artist && req.params.name))
+        res.redirect("http://localhost:8888")
+
+    var customUrl = baseUrl + `search?query=track:${req.params.name} artist:${req.params.artist}&type=track&limit=1`
+
+    try{
+        var response = await axios.get(customUrl, { 
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            }
+         });
+
+        res.send(response.data.tracks.items[0])
+    }
+    catch(err)
+    {
+        console.log(err.message)
+        res.redirect("http://localhost:8888")
+    }
 })
 
 // Function to generate the access token

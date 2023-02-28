@@ -1,6 +1,3 @@
-<!-- https://www.youtube.com/watch?v=1vR3m0HupGI -->
-<!-- https://www.codeply.com/go/bp/Bd8JJ381xq -->
-
 <!doctype html>
 <html lang="en">
 
@@ -14,17 +11,21 @@
 
     <!-- Our Css -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
     <title>Stanify</title>
 </head>
 
 <body class="text-center">
-    <nav class="navbar" style="padding: 0;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#" style="color: white">
-                <img src="img/Logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
-                Stanify
-            </a>
+    <nav class="navbar navbar-expand-lg" style="">
+        <div class="container-fluid justify-content-center">
+            <div class="d-flex ">
+                <a class="navbar-brand" href="#" id="stanify-logo">
+                    <!-- <img src="img/Logo.png" alt="Logo" width="80" height="80" class="d-inline-block align-text-top"> -->
+                    Stanify
+                </a>
+            </div>
+
         </div>
     </nav>
 
@@ -38,9 +39,9 @@
                     </button>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="button-list">
-                        <a class="dropdown-item" onclick="fetchSongs('Kendrick Lamar')" href="#">Kendrick Lamar</a>
+                        <a class="dropdown-item" onclick="fetchSongs('Mac DeMarco')" href="#">Mac DeMarco</a>
                         <a class="dropdown-item" onclick="fetchSongs('Mac Miller')" href="#">Mac Miller</a>
-                        <a class="dropdown-item" onclick="fetchSongs('Bad Bunny')" href="#">Bad Bunny</a>
+                        <a class="dropdown-item" onclick="fetchSongs('The Weekend')" href="#">The Weekend</a>
                         <a class="dropdown-item" onclick="fetchSongs('Ab6ix')" href="#">Ab6ix</a>
                     </div>
                 </div>
@@ -60,27 +61,33 @@
             </div>
         </div>
 
-        <div class="row middle-top">
+        <div class="row middle">
             <div class="col x d-flex flex-column">
                 <h2><span id="seconds"></span>.<span id="tens"></span> s</h2>
                 <div><img class="" alt="Album Art" id="album-art"></div>
             </div>
         </div>
 
-        <div class="row middle-bottom">
+        <!-- <div class="row middle-bottom">
             <div class="col">
                 <div>
                     <audio id="player"></audio>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="row bottom d-flex justify-content-center">
             <div class="col-6">
-                <input class="form-control" type="text" size="5" id="input-box" placeholder="Guess the song..."
-                    onchange="updateInputAnimation()">
+                <form autocomplete="off">
+                    <div class="autocomplete">
+                        <input class="form-control" type="text" size="5" id="input-box" placeholder="Guess the song..."
+                            onchange="updateInputAnimation()">
+                    </div>
+                </form>
             </div>
         </div>
+
+        <audio id="player"></audio>
     </div>
 
     <!-- Bootstrap Scripts -->
@@ -95,20 +102,6 @@
         crossorigin="anonymous"></script>
 
     <!-- Our Script -->
-    <script>
-        // Initializes cookies 
-        if (!document.cookie)
-        {
-            document.cookie = 'appendTens=00';
-            document.cookie = 'appendSeconds=00';
-            document.cookie = 'lastGuess=00.00 seconds';
-            document.cookie = 'albumArt=';
-            document.cookie = 'artistList=';
-            document.cookie = 'artist= Hanz Zimmer';
-        }
-        console.log(document.cookie);
-
-    </script>
     <script src="script.js"></script>
     
     <!-- <script type="module" src="parser.js"></script> -->

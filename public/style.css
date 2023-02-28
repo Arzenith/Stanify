@@ -5,23 +5,35 @@ html, body {
     height: 100%; 
     background: black;
     color: white;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
 }
 
 /* Sections of Page Sizing */
 .top {
-    height: 15vh;
+    height: 18vh;
+    padding-top: 2vh;
 }
 
-.middle-top {
-    height: 40vh;
+.navbar {
+    background-color: #191414;
 }
 
-.middle-bottom {
+#stanify-logo {
+    color: white;
+    /* font-size: 2.5rem; */
+}
+
+.middle {
+    height: 50vh;
+}
+
+/* .middle-bottom {
     height: 20vh;
-}
+} */
 
 .bottom {
-    height: 15vh;
+    height: 30vh;
 }
 
 .x {
@@ -106,7 +118,7 @@ html, body {
     to {
       box-shadow: 0 0 5px 5px #1DB954;
     }
-}  
+}
 
 /* Shake when wrong */
 .invalid {
@@ -125,4 +137,40 @@ html, body {
     border: solid 2px #1DB954;
     border-radius: 5px;
     width: 30%;
+}
+
+
+/* Autocomplete Guess CSS */
+.autocomplete {
+    position: relative;
+    display: inline-block;
+    width: 70%;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #191414;
+    border: 1px solid #1DB954;
+}
+
+.autocomplete-items div:hover {
+    background-color: #302d2d; 
+    color: #1DB954;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+    background-color: #302d2d !important; 
+    color: #1DB954;
 }
