@@ -1,3 +1,9 @@
+// const replaceWord = require("./test.js")
+// console.log(replaceWord.replaceWord("xxxx"))
+// import { replaceWord } from "./test.mjs";
+
+// replaceWord("that easy")
+
 // DOM Variables
 var player = document.getElementById('player');
 var appendTens = document.getElementById("tens");
@@ -56,7 +62,7 @@ function fetchSongs(artistInput) {
     resetTimer(false);
 
     // When Fetching, display loading gif
-    albumArt.src = "./img/load.gif";
+    albumArt.src = "/public/images/load.gif";
     albumArt.classList.remove("blur");
 
     // Create artist URL used for fetch
@@ -88,7 +94,7 @@ async function fetchNextTrack(song) {
             console.log('Something went wrong');
             return;
         }
-        return await res.json();
+        return res.json();
     })
     .then(async res => {
         song.previewUrl = res.preview_url;
