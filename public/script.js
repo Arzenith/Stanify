@@ -1,15 +1,3 @@
-// Initializes cookies 
-if (!document.cookie)
-{
-    document.cookie = 'appendTens=00';
-    document.cookie = 'appendSeconds=00';
-    document.cookie = 'lastGuess=00.00 seconds';
-    document.cookie = 'albumArt=';
-    document.cookie = 'artistList=';
-    document.cookie = 'artist= Hanz Zimmer';
-}
-console.log(document.cookie);
-
 // DOM Variables
 var player = document.getElementById('player');
 var appendTens = document.getElementById("tens");
@@ -52,14 +40,8 @@ function Song(name, albumPicture, previewUrl) {
     this.previewUrl = previewUrl;
 }
 
-// Replaces webpage information with the cookie data
-lastGuess.innerHTML = getCookie('lastGuess');
-appendTens.innerHTML = getCookie('appendTens');
-appendSeconds.innerHTML = getCookie('appendSeconds');
-
-albumArt.src = getCookie('albumArt');
 albumArt.classList.add("blur");
-artist = getCookie('artist');
+artist = "Hanz Zimmer";
 
 // Function fetches data and parses based off input artist
 function fetchSongs(artistInput) {
@@ -127,8 +109,8 @@ async function parseArtist(res) {
     })
 
     // Print out fetch data info
+    artist = artistParsed.name
     console.log(artistParsed.name);
-    document.cookie = "artist=" + artistParsed.name;
     // console.log('Album Count', albumCount);
     console.log("Total Song Count", nonNullTrackCount + nullTrackCount)
     console.log('Available Tracks', nonNullTrackCount);
@@ -156,8 +138,6 @@ async function LoadAudioPlayer() {
 
     // Load current songs album picture and adds styling
     albumArt.src = currentSong.albumPicture;
-    document.cookie = "albumArt=" + currentSong.albumPicture;
-    cookieLog();
     albumArt.classList.add("blur");
     // Load preview song into source
     player.src = currentSong.previewUrl;
@@ -235,12 +215,10 @@ function resetTimer(nextFlag) {
     tens = "00";
     seconds = "00";
 
-    // Update HTML and Cookies
+    // Update HTML
     appendTens.innerHTML = tens;
-    document.cookie = "appendTens" + tens;
 
     appendSeconds.innerHTML = seconds;
-    document.cookie = "appendSeconds" + seconds;
 
     // If right arrow key is pressed, reset timer
     if(nextFlag == true) {
@@ -355,13 +333,6 @@ function checkGuessInput() {
         // Update Lastest Score
         score = String(seconds + "." + tens + " seconds")
         lastGuess.innerHTML = score
-
-        document.cookie = "lastGuess=" + score;
-
-        document.cookie = "appendTens=" + tens;
-        document.cookie = "appendSeconds=" + seconds;
-
-        console.log("HERE: " + document.cookie)
         
         // Begin Unblur Animation
         albumArt.classList.remove("blur");
@@ -371,6 +342,8 @@ function checkGuessInput() {
         guessInput.style.border = "solid 2px #1DB954";
         guessInput.classList.remove("invalid");
         guessInput.classList.add("correct");
+
+        shareInfo.push(getShareInfo())
     }
     // If incorrect
     else {
@@ -420,27 +393,62 @@ function updateInputAnimation() {
     guessInput.classList.remove("correct");
 }
 
-function getCookie(cookieID)
-{
-    let cookie = {};
-    document.cookie.split(';').forEach((element) =>{
-        let [key, value] = element.split('=');
-        cookie[key.trim()] = value;
-    });
-    return cookie[cookieID]
-}
-
-function cookieLog() 
-{
-    var cookies = document.cookie.split(';').reduce(
-        (cookies, cookie) => {
-            const [name, val] = cookie.split('=').map(c => c.trim());
-            cookies[name] = val;
-            return cookies;
-        }, {});
-        console.log(cookies)
-}
-
-cookieLog()
-
 fetchSongs(artist)
+
+// Share Button Work
+
+// Acts as table Header
+var Intial = {
+    artist: "Artist",
+    song: "Song",
+    score: "Score"
+}
+var shareInfo = [Intial];
+
+// Function for displaying share window and relevant information
+function share() {
+    
+    var ShareWindow = window.open("", "Share", "width= 500, height=275");
+
+    // Resets the window if user presses share button
+    ShareWindow.document.body.innerHTML = null;
+    ShareWindow.document.write("<p> This Session's Results: </p>");
+
+    var table = document.createElement("table")
+    var tableBody = document.createElement("tbody")
+
+    // For each guessed song
+    for (var i = 0; i < shareInfo.length; i++)
+    {
+        const row = document.createElement("tr");
+
+        // Key Value pair to iterate through object entries
+        for (const [key, value] of Object.entries(shareInfo[i]))
+        {
+            const cell = document.createElement("td");
+            cell.appendChild(document.createTextNode(value))
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row)
+    }
+
+    table.appendChild(tableBody);
+
+    ShareWindow.document.body.appendChild(table);
+    table.setAttribute("border", "2")   
+}
+
+// Puts relevant share info in an object 
+function getShareInfo ()
+{
+    var Share = {
+        artist: artist,
+        song: currentSong.name,
+        score: score
+    }
+    // If the user hasn't guess yet
+    if (Share.score != 0)
+    {
+        return Share;
+    }
+}

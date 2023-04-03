@@ -174,3 +174,7 @@ html, body {
     background-color: #302d2d !important; 
     color: #1DB954;
 }
+
+#ShareButton {
+    color: #1DB954;
+}
