@@ -23,6 +23,8 @@ var res;
 var songs = [];
 var artist;
 var songFinished = false;
+var score = "0.00 seconds";
+var attempts = 0;
 
 // Stopwatch Variables
 var seconds = 00; 
@@ -162,7 +164,18 @@ document.onkeydown = function (e) {
         }
     }
     // Play Random Song by pressing Right Arrow Key
+
     if(e.code == "ArrowRight"){
+
+        if (!EnteredtoShare)
+        {
+            shareInfo.push(getShareInfo("Yes"));
+        }
+
+        EnteredtoShare = false;
+        score = "0.00 seconds";
+        attempts = 0;
+
         songFinished = false;
         closeAllLists()
         // Load new first song in array
@@ -343,7 +356,9 @@ function checkGuessInput() {
         guessInput.classList.remove("invalid");
         guessInput.classList.add("correct");
 
-        shareInfo.push(getShareInfo())
+        attempts++;
+        shareInfo.push(getShareInfo("No"))
+        EnteredtoShare = true;
     }
     // If incorrect
     else {
@@ -351,6 +366,8 @@ function checkGuessInput() {
         guessInput.style.border = "solid 2px red";
         guessInput.classList.add("invalid");
         guessInput.classList.remove("correct");
+
+        attempts++;
     }
 }
 
@@ -397,11 +414,14 @@ fetchSongs(artist)
 
 // Share Button Work
 
+var EnteredtoShare = false;
 // Acts as table Header
 var Intial = {
     artist: "Artist",
     song: "Song",
-    score: "Score"
+    score: "Score",
+    attempts: "Attempts",
+    skipped: "Skipped?"
 }
 var shareInfo = [Intial];
 
@@ -439,16 +459,14 @@ function share() {
 }
 
 // Puts relevant share info in an object 
-function getShareInfo ()
+function getShareInfo (color)
 {
     var Share = {
         artist: artist,
         song: currentSong.name,
-        score: score
+        score: score,
+        attempts: attempts,
+        skipped: color
     }
-    // If the user hasn't guess yet
-    if (Share.score != 0)
-    {
-        return Share;
-    }
+    return Share;
 }
