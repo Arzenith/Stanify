@@ -386,6 +386,11 @@ document.onkeydown = async function (e) {
     if(e.code == "ArrowRight"){
         closeAllLists();
         songIndex++;
+        if(songIndex >= songs.length){
+            songIndex = 0;
+            
+            songs = shuffle(songs);
+        }
         currentSong = songs[songIndex];
 
         if(currentSong.previewUrl == null) {
