@@ -696,7 +696,7 @@ async function revealTrack(guessFlag) {
             img.height = 50;
 
             li.appendChild(img);
-            li.appendChild(document.createTextNode(guessedSongsArr[i].name));
+            li.appendChild(document.createElement("b")).appendChild(document.createTextNode(guessedSongsArr[i].name));
             li.appendChild(document.createElement("br"));
             li.appendChild(document.createTextNode(guessedSongsArr[i].time));
             list.appendChild(li);
