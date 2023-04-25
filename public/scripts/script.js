@@ -43,6 +43,7 @@ var firstSongFlag = 0;
 // var guessedSongCount = 0;
 var bestGuess = Number.MAX_SAFE_INTEGER;
 var globalGuessFlag = false;
+var guessedSongsArr = [];
 
 // Variables to keep track of the user's statistics
 var userAddedArtists = []
@@ -54,12 +55,13 @@ loadVisualizer(player);
 renderFrame();
 
 // Data Types
-function Song(name, albumPicture, previewUrl, artistName, guess) {
+function Song(name, albumPicture, previewUrl, artistName, guess, time) {
     this.name = name;
     this.albumPicture = albumPicture;
     this.previewUrl = previewUrl;
     this.artistName = artistName;
     this.guess = guess;
+    this.time = time;
 }
 
 function ArtistStatistics(name, attempts, bestAttempt)
@@ -104,6 +106,12 @@ async function setArtist()
 
     // sends in the artist to update the webpage with the correct artist
     await fetchSongs(artist)
+
+    var list = document.getElementById("scores");
+
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode("No songs to display"));
+    list.appendChild(li);
 }
 
 // Checks to see if the stat view is able to be updated, this guards in the case in which the user is
@@ -178,6 +186,7 @@ async function fetchSongs(artistInput) {
     player.pause();
     resetTimer();
     firstSongFlag = 1;
+    albums = [];
 
     artist = artistInput
 
@@ -266,12 +275,12 @@ async function parseArtist(res) {
             // If the track exists
             if(track.previewUrl != null) {
                 // Add track to songs array
-                songs.push(new Song(track.name, album.albumPicture, track.previewUrl, artistParsed.name, false));
+                songs.push(new Song(track.name, album.albumPicture, track.previewUrl, artistParsed.name, false, -1));
 
                 nonNullTrackCount++;
             }
             else {
-                songs.push(new Song(track.name, album.albumPicture, null, artistParsed.name, false))
+                songs.push(new Song(track.name, album.albumPicture, null, artistParsed.name, false, -1));
 
                 nullTrackCount++;
             }
@@ -651,6 +660,48 @@ async function revealTrack(guessFlag) {
         averageGuessElem.innerHTML = String(Number(calculateAverage(currentArtistStatisticsList[indexFound].attempts)).toFixed(2) + " seconds");
 
         await setUserStatistics(currentArtistStatisticsList);
+        
+        currentSong.guess = true;
+        currentSong.time = score;
+
+        //right shift array if > 5
+        if(guessedSongsArr.length >= 5){
+            guessedSongsArr.shift();
+        }
+        //adding song
+        guessedSongsArr.push(currentSong);
+
+        /* debugging
+        for(var i = 0; i < guessedSongsArr.length; i++) 
+        {
+            console.log(guessedSongsArr[i].name, guessedSongsArr.length + '\n');
+        }
+        */
+
+        var list = document.getElementById("scores");
+
+        //resetting html
+        list.innerHTML = "";
+
+        // Loop through array and create a new <li> element for each one
+        for (var i = guessedSongsArr.length-1; i >=0 ; i--) {
+
+            console.log(i);
+
+            var li = document.createElement("li");
+            var img = document.createElement("img");
+            img.src = guessedSongsArr[i].albumPicture;
+
+            img.width = 50;
+            img.height = 50;
+
+            li.appendChild(img);
+            li.appendChild(document.createTextNode(guessedSongsArr[i].name));
+            li.appendChild(document.createElement("br"));
+            li.appendChild(document.createTextNode(guessedSongsArr[i].time));
+            list.appendChild(li);
+        }
+
     }
     else{
         guessInput.value = currentSong.name;

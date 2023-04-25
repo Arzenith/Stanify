@@ -195,3 +195,19 @@ canvas {
     background-color: #1DB954;
     border-color: #1DB954;
 }
+
+ul {
+    list-style-type: none;
+}
+  
+li img {
+    float: left;
+    margin-right: 10px;
+}
+
+li::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+  
