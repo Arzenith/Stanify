@@ -186,7 +186,6 @@ async function fetchSongs(artistInput) {
     player.pause();
     resetTimer();
     firstSongFlag = 1;
-    albums = [];
 
     artist = artistInput
 
